@@ -1,95 +1,79 @@
+"use client";
+
+import { useState } from "react";
+import { ethers } from "ethers";
+import { sendToken } from "../utils/contract";
 import Image from "next/image";
-import styles from "./page.module.css";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [account, setAccount] = useState(null);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== "undefined") {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      setAccount(accounts[0]);
+    } else {
+      alert("MetaMask가 설치되어 있지 않습니다.");
+    }
+  };
+
+  const handleSendToken = async () => {
+    try {
+      const tx = await sendToken();
+      alert("🎉 10 JKJ 토큰 전송 완료!\n\nTX:\n" + tx);
+    } catch (error) {
+      alert("토큰 전송 실패: " + error.message);
+    }
+  };
+
+  return (
+    <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      backgroundColor: "#f0f2f5",
+    }}>
+      <div style={{
+        backgroundColor: "white",
+        padding: "40px",
+        borderRadius: "20px",
+        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+        textAlign: "center",
+        maxWidth: "480px",
+        width: "100%",
+      }}>
+        <Image src="/cute-friends.png" alt="귀여운 친구들" width={180} height={180} />
+        <h1 style={{ fontSize: "28px", fontWeight: "bold", margin: "20px 0" }}>JKJ 리워드 사이트 🎁</h1>
+        <p style={{ fontSize: "16px", marginBottom: "24px" }}>재구 친구들을 위한 귀여운 리워드 페이지예요 😊</p>
+        <div style={{ marginBottom: "24px" }}>
+          {account ? (
+            <p style={{ color: "green", fontWeight: "bold" }}>✅ 연결된 지갑: {account}</p>
+          ) : (
+            <button onClick={connectWallet} style={buttonStyle}>지갑 연결하기</button>
+          )}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={handleSendToken}
+          style={{
+            ...buttonStyle,
+            backgroundColor: "#6366f1",
+            color: "white",
+          }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          🎈 리워드 토큰 전송
+        </button>
+      </div>
     </div>
   );
 }
+
+const buttonStyle = {
+  padding: "12px 24px",
+  fontSize: "16px",
+  fontWeight: "bold",
+  border: "none",
+  borderRadius: "8px",
+  cursor: "pointer",
+  backgroundColor: "#e0e0e0",
+};
