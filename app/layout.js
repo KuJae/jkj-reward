@@ -1,20 +1,29 @@
-// app/layout.js
 import './globals.css';
-import { Inter, Geist, Geist_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ['latin'] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ['latin'] });
 
 export const metadata = {
-  title: 'JKJ 리워드 허브',
-  description: '재구 친구들을 위한 리워드 페이지',
+  title: '🐰 재구의 특별한 선물 💝',
+  description: '재구가 여러분을 위해 준비한 특별한 선물이 도착했어요! ✨',
+  openGraph: {
+    title: '🐰 재구의 특별한 선물 💝',
+    description: '재구가 여러분을 위해 준비한 특별한 선물이 도착했어요! ✨',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: '재구의 특별한 선물'
+      }
+    ]
+  }
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
-      <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable}`}>
+      <body className={inter.className}>
         {children}
       </body>
     </html>
