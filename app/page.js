@@ -76,7 +76,7 @@ export default function Home() {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const txHash = await sendToken(signer, account);
+      const txHash = await sendToken(signer, account, commentId);
       setRewardedComments(prev => new Set([...prev, commentId]));
       // 리워드 전송 후 남은 잔액 갱신
       const contract = new ethers.Contract(
